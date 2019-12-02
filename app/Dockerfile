@@ -14,4 +14,5 @@ FROM scratch
 COPY --from=builder /go/bin/age /age
 COPY --from=builder /etc/passwd /etc/passwd
 USER scratchuser
+EXPOSE 8080
 CMD ["/age"]

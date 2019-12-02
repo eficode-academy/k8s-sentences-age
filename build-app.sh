@@ -1,3 +1,2 @@
 #!/bin/bash
-
-docker build -t hoeghh/age:1.0 ./app
+docker build -t "$usern/age:1.0" ./app

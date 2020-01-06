@@ -13,10 +13,10 @@ import (
 var (
     httpReqs = prometheus.NewCounterVec(
 		prometheus.CounterOpts{
-			Name: "age_http_requests_total",
-			Help: "How many HTTP requests processed",
+			Name: "sentence_requests_total",
+			Help: "Number of requests",
 		},
-		[]string{"code", "method"},
+		[]string{"type"},
 	)
 )
 
@@ -33,7 +33,7 @@ func handler(httpReqs *prometheus.CounterVec) http.HandlerFunc {
 
         fmt.Fprintf(w, "%d", age)
 
-        m := httpReqs.WithLabelValues("200", "GET")
+        m := httpReqs.WithLabelValues("age")
         m.Inc()
     }
 }

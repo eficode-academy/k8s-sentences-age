@@ -10,7 +10,7 @@ class TestAge(unittest.TestCase):
 
     def get_metric(self, metric_name):
         metrics = requests.get(self.metrics_url, timeout=10).text
-        for family in text_string_to_metric_families(metrics.decode('utf-8')):
+        for family in text_string_to_metric_families(metrics):
             if family.samples[0][0]==metric_name:
                 return [(sample[2], sample[1]) for sample in family.samples]
 
@@ -27,7 +27,6 @@ class TestAge(unittest.TestCase):
         self.assertTrue(age<100)
 
     def test_request_metric(self):
-        response = requests.get(self.url, timeout=1) # Dummy, avoid non-reported zero metric
         m1 = self.get_metric('sentence_requests_total')
         self.assertTrue(len(m1)==1)
         self.assertTrue(set(m1[0][1].keys())==set(['type']))

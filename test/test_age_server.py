@@ -21,18 +21,19 @@ class TestAge(unittest.TestCase):
         self.assertTrue(re.match('^\d+$', response.text))
 
     def test_range(self):
-        response = requests.get(self.url, timeout=1)
+        response = requests.get(self.url, timeout=10)
         age = int(response.text)
         self.assertTrue(age>0)
         self.assertTrue(age<100)
 
     def test_request_metric(self):
+        response = requests.get(self.url, timeout=10) # Ignore potential non-reported zero metric
         m1 = self.get_metric('sentence_requests_total')
         self.assertTrue(len(m1)==1)
         self.assertTrue(set(m1[0][1].keys())==set(['type']))
         self.assertTrue(m1[0][1]['type']=='age')
         cnt1 = m1[0][0]
-        response = requests.get(self.url, timeout=1)
+        response = requests.get(self.url, timeout=10)
         m2 = self.get_metric('sentence_requests_total')
         self.assertTrue(len(m2)==1)
         self.assertTrue(set(m2[0][1].keys())==set(['type']))

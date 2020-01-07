@@ -1,2 +1,2 @@
 #! /bin/bash
-USERN=$usern docker-compose -p ci up --exit-code-from sut --build
+docker_username=$docker_username docker-compose -p ci up --exit-code-from sut --build

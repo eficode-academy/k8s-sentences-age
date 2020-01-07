@@ -10,7 +10,7 @@ class TestAge(unittest.TestCase):
 
     def get_metric(self, metric_name):
         metrics = requests.get(self.metrics_url, timeout=1).content
-        for family in text_string_to_metric_families(metrics):
+        for family in text_string_to_metric_families(metrics.decode('utf-8')):
             if family.samples[0][0]==metric_name:
                 return [(sample[2], sample[1]) for sample in family.samples]
 

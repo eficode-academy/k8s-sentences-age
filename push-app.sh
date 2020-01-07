@@ -1,5 +1,5 @@
 #!/bin/bash
 
-docker push "$usern/age:1.0"  &
+docker push "$docker_username/age:1.0"  &
 
 wait

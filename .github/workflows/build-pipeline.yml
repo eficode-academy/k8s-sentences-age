@@ -1,0 +1,56 @@
+name: Docker Image CI
+
+on: [push]
+     # Environment variables available to all jobs and steps in this workflow
+env: # Or as an environment variable
+      usern: ${{ secrets.DOCKER_USER }}
+      userp: ${{ secrets.DOCKER_PW }}
+      GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
+      GKE_EMAIL: ${{ secrets.GKE_EMAIL }}
+      GITHUB_SHA: ${{ github.sha }}
+      GKE_ZONE: us-west1-a
+      GKE_CLUSTER: example-gke-cluster
+      IMAGE: gke-test
+
+jobs:
+
+  test-code:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+      - name: Upload workspace
+        uses: actions/upload-artifact@v1
+        with:
+          name: workspace
+          path: .
+      - name: Test the code 
+        run: ./unit-test.sh
+
+  build-docker-image:
+    runs-on: ubuntu-latest
+    needs: test-code
+    steps:
+    - name: Download workspace
+      uses: actions/download-artifact@v1
+      with:
+        name: workspace
+        path: .
+    - name: Build the Docker image
+      run: . build-app.sh
+    - name: Login to Docker
+      run: echo "$userp" | docker login -u "$usern" --password-stdin
+    - name: Push the docker image
+      run: . push-app.sh
+  
+  component-test-docker-image:
+    runs-on: ubuntu-latest
+    needs: build-docker-image
+    steps:
+    - name: Download workspace
+      uses: actions/download-artifact@v1
+      with:
+        name: workspace
+        path: .
+    - name: Run the component tests
+      run: . component-test.sh
+      working-directory: ./test

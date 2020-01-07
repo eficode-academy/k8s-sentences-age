@@ -3,14 +3,8 @@ name: Docker Image CI
 on: [push]
      # Environment variables available to all jobs and steps in this workflow
 env: # Or as an environment variable
-      usern: ${{ secrets.DOCKER_USER }}
-      userp: ${{ secrets.DOCKER_PW }}
-      GKE_PROJECT: ${{ secrets.GKE_PROJECT }}
-      GKE_EMAIL: ${{ secrets.GKE_EMAIL }}
-      GITHUB_SHA: ${{ github.sha }}
-      GKE_ZONE: us-west1-a
-      GKE_CLUSTER: example-gke-cluster
-      IMAGE: gke-test
+      docker_username: ${{ secrets.DOCKER_USER }}
+      docker_password: ${{ secrets.DOCKER_PW }}
 
 jobs:
 
@@ -38,7 +32,7 @@ jobs:
     - name: Build the Docker image
       run: . build-app.sh
     - name: Login to Docker
-      run: echo "$userp" | docker login -u "$usern" --password-stdin
+      run: echo "$docker_password" | docker login -u "$docker_username" --password-stdin
     - name: Push the docker image
       run: . push-app.sh
   

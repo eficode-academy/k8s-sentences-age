@@ -9,13 +9,13 @@ class TestAge(unittest.TestCase):
     metrics_url = os.getenv('METRICS_URL', 'http://127.0.0.1:8080/metrics')
 
     def get_metric(self, metric_name):
-        metrics = requests.get(self.metrics_url, timeout=1).content
+        metrics = requests.get(self.metrics_url, timeout=10).text
         for family in text_string_to_metric_families(metrics.decode('utf-8')):
             if family.samples[0][0]==metric_name:
                 return [(sample[2], sample[1]) for sample in family.samples]
 
     def test_response_format(self):
-        response = requests.get(self.url, timeout=1)
+        response = requests.get(self.url, timeout=10)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.encoding, 'utf-8')
         self.assertTrue(re.match('^\d+$', response.text))
@@ -27,6 +27,7 @@ class TestAge(unittest.TestCase):
         self.assertTrue(age<100)
 
     def test_request_metric(self):
+        response = requests.get(self.url, timeout=1) # Dummy, avoid non-reported zero metric
         m1 = self.get_metric('sentence_requests_total')
         self.assertTrue(len(m1)==1)
         self.assertTrue(set(m1[0][1].keys())==set(['type']))

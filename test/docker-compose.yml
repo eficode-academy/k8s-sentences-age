@@ -8,6 +8,6 @@ services:
     depends_on:
       - web
   web:
-    image: ${docker_username}/age:1.0
+    image: ${docker_username}/age:latest
     ports: 
       - 8080:8080

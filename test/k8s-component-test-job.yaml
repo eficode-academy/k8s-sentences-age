@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: component-test
+spec:
+  template:
+    metadata:
+      labels:
+        type: component-test
+    spec:
+      containers:
+      - name: component-test
+        image: age-test
+        imagePullPolicy: Never
+        env:
+        - name: SERVICE_URL
+          value: http://age:8080
+        - name: METRICS_URL
+          value: http://age:8080/metrics
+      restartPolicy: Never
